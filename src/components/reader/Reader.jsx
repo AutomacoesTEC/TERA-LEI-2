@@ -11,7 +11,7 @@ const TabTeia = lazy(() => import('./TabTeia'));
 const TabIndice = lazy(() => import('./TabIndice'));
 const TabAnexos = lazy(() => import('./TabAnexos'));
 
-export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study }) {
+export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study, tagsConfig = [], setTagsConfig = () => {} }) {
   const [tab, setTab] = useState("mapa");
   const [saved, setSaved] = useState(false);
   const [goSearch, setGoSearch] = useState({ art: "", ts: 0 });
@@ -216,7 +216,7 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study 
       {tab === "mapa" && <TabMapa ds={ds} />}
       <Suspense fallback={<div style={{ padding: 32, textAlign: "center", color: "var(--text-sec)", fontSize: 13 }}>Carregando…</div>}>
         {tab === "artigos" && <TabArtigos ds={ds} />}
-        {tab === "estudo" && <TabEstudo ds={ds} lei={lei} gSt={gSt} uSt={wrappedUSt} />}
+        {tab === "estudo" && <TabEstudo ds={ds} lei={lei} gSt={gSt} uSt={wrappedUSt} tagsConfig={tagsConfig} setTagsConfig={setTagsConfig} />}
         {tab === "busca" && <TabIndice ds={ds} area={area} onGoToArt={a => { setGoSearch({ art: a, ts: Date.now() }); setTab("texto"); }} />}
         {tab === "anexos" && <TabAnexos lei={lei} addAnexo={addAnexo} delAnexo={delAnexo} />}
         {tab === "teia" && <TabTeia ds={ds} buildRecursiveTree={buildRecursiveTree} buildRecursiveChain={buildRecursiveChain} />}

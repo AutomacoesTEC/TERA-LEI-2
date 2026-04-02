@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { DIV } from '../../constants/patterns';
 import RichTextEditor from './RichTextEditor';
+import TagSelector from './TagSelector';
 
-export default function TabEstudo({ ds, lei, gSt, uSt }) {
+export default function TabEstudo({ ds, lei, gSt, uSt, tagsConfig = [], setTagsConfig = () => {} }) {
   const [filtroStatus, setFiltroStatus] = useState("");
   const [selSection, setSelSection] = useState(null);
   const [collNav, setCollNav] = useState({});
@@ -173,7 +174,16 @@ export default function TabEstudo({ ds, lei, gSt, uSt }) {
               return (
                 <tr key={ri} style={{ opacity: isInativo ? 0.6 : 1, background: isVetado ? "rgba(231,76,60,0.06)" : isRevogado ? "rgba(231,76,60,0.04)" : "inherit" }}>
                   <td style={{ fontWeight: 700, fontSize: 12, verticalAlign: "top" }}>
-                    {d.id}
+                    <div style={{ marginBottom: 4 }}>{d.id}</div>
+                    <TagSelector
+                      selectedTags={gSt(lei.id, ri, "tags") || []}
+                      onToggle={tid => {
+                        const current = gSt(lei.id, ri, "tags") || [];
+                        uSt(lei.id, ri, "tags", current.includes(tid) ? current.filter(x => x !== tid) : [...current, tid]);
+                      }}
+                      tagsConfig={tagsConfig}
+                      setTagsConfig={setTagsConfig}
+                    />
                     {isVetado && <div><span className="badge badge-revogado" style={{ marginTop: 4, display: "inline-block" }}>VETADO</span></div>}
                     {isRevogado && <div><span className="badge badge-revogado" style={{ marginTop: 4, display: "inline-block" }}>REVOGADO</span></div>}
                   </td>
@@ -197,6 +207,18 @@ export default function TabEstudo({ ds, lei, gSt, uSt }) {
                   </td>
                   <td style={{ verticalAlign: "top" }}>
                     <RichTextEditor value={nt} onBlur={html => uSt(lei.id, ri, "note", html)} placeholder="Expandir anotação..." />
+                    <div style={{ marginTop: 6 }}>
+                      <div style={{ fontSize: 10, color: "var(--text-mute)", marginBottom: 2 }}>Tags da Anotação:</div>
+                      <TagSelector
+                        selectedTags={gSt(lei.id, ri, "noteTags") || []}
+                        onToggle={tid => {
+                          const current = gSt(lei.id, ri, "noteTags") || [];
+                          uSt(lei.id, ri, "noteTags", current.includes(tid) ? current.filter(x => x !== tid) : [...current, tid]);
+                        }}
+                        tagsConfig={tagsConfig}
+                        setTagsConfig={setTagsConfig}
+                      />
+                    </div>
                   </td>
                 </tr>
               );

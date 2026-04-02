@@ -179,7 +179,7 @@ export default function App() {
       </header>
       <main style={{ width: "100%", padding: "20px" }}>
         {vw === "library" && <Lib lib={lib} sel={sel} onSel={l => { setSel(l); setVw("reader"); }} onDel={del} onUp={upF} uping={uping} fRef={fRef} />}
-        {vw === "reader" && sel && <Reader lei={sel} area={area} gSt={gSt} uSt={uSt} addAnexo={addAnexo} delAnexo={delAnexo} study={study} />}
+        {vw === "reader" && sel && <Reader lei={sel} area={area} gSt={gSt} uSt={uSt} addAnexo={addAnexo} delAnexo={delAnexo} study={study} tagsConfig={tagsConfig} setTagsConfig={t => { setTagsConfig(t); try { localStorage.setItem("t3-tags-config", JSON.stringify(t)); } catch {} }} />}
         {vw === "econsultor" && <EConsultor lib={lib} />}
         {vw === "buscageral" && <BuscaGeral lib={lib} study={study} tagsConfig={tagsConfig} />}
         {vw === "reforma" && <Ref />}
