@@ -9,7 +9,7 @@ export default function EConsultor({ lib }) {
     <div className="fade">
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>E-Consultor</h2>
       <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", marginBottom: 14 }}>
-        {subs.map(s => <button key={s.id} className={`stab ${sub === s.id ? "on" : ""}`} onClick={() => setSub(s.id)}>{s.lb}</button>)}
+        {subs.map(s => <a key={s.id} href={`#ec-${s.id}`} className={`stab ${sub === s.id ? "on" : ""}`} onClick={e => { e.preventDefault(); setSub(s.id); window.location.hash = `ec-${s.id}`; }} style={{ textDecoration: "none" }}>{s.lb}</a>)}
       </div>
       {sub === "anotacoes" && <EConsultorAnotacoes lib={lib} />}
       {sub === "econsulta" && <EConsultorBusca lib={lib} />}

@@ -210,7 +210,7 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study 
         </div>
       </div>
       <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", marginBottom: 14, overflowX: "auto" }}>
-        {tabs.map(t => <button key={t.id} className={`stab ${tab === t.id ? "on" : ""}`} onClick={() => setTab(t.id)}>{t.lb}</button>)}
+        {tabs.map(t => <a key={t.id} href={`#tab-${t.id}`} className={`stab ${tab === t.id ? "on" : ""}`} onClick={e => { e.preventDefault(); setTab(t.id); window.location.hash = `tab-${t.id}`; }} style={{ textDecoration: "none" }}>{t.lb}</a>)}
       </div>
       {tab === "texto" && <TabTexto ds={ds} lei={lei} gSt={gSt} uSt={wrappedUSt} goSearch={goSearch} />}
       {tab === "mapa" && <TabMapa ds={ds} />}

@@ -143,6 +143,19 @@ export default function App() {
     { id: "atualizacoes", ic: IC.bl, lb: "Atualizações" }
   ];
 
+  useEffect(() => {
+    if (!auth) return;
+    const ids = nav.map(n => n.id);
+    const hash = window.location.hash.replace("#", "");
+    if (hash && ids.includes(hash)) setVw(hash);
+    const onHash = () => {
+      const h = window.location.hash.replace("#", "");
+      if (h && ids.includes(h)) setVw(h);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [auth]);
+
   return (
     <div style={{ minHeight: "100vh" }}>
       <header style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border)", padding: "8px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "var(--shadow)" }}>
@@ -151,7 +164,7 @@ export default function App() {
           <div><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "1px" }}>TERA</div><div style={{ fontSize: 11, color: "var(--text-sec)" }}>CADERNO ELETRÔNICO</div></div>
         </div>
         <nav style={{ display: "flex", gap: 2, overflowX: "auto" }}>
-          {nav.map(n => <button key={n.id} className={`nb ${vw === n.id ? "on" : ""}`} onClick={() => setVw(n.id)}><Ic d={n.ic} s={14} c={vw === n.id ? "var(--gold)" : "var(--text-sec)"} />{n.lb}</button>)}
+          {nav.map(n => <a key={n.id} href={`#${n.id}`} className={`nb ${vw === n.id ? "on" : ""}`} onClick={e => { e.preventDefault(); setVw(n.id); window.location.hash = n.id; }} style={{ textDecoration: "none" }}><Ic d={n.ic} s={14} c={vw === n.id ? "var(--gold)" : "var(--text-sec)"} />{n.lb}</a>)}
         </nav>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <ThemeBtn theme={theme} toggle={toggleTheme} />

@@ -46,7 +46,7 @@ export default function Ref() {
     <div className="fade">
       <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Reforma Tributária</h2>
       <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", marginBottom: 14 }}>
-        {subs.map(s => <button key={s.id} className={`stab ${sub === s.id ? "on" : ""}`} onClick={() => setSub(s.id)}>{s.lb}</button>)}
+        {subs.map(s => <a key={s.id} href={`#ref-${s.id}`} className={`stab ${sub === s.id ? "on" : ""}`} onClick={e => { e.preventDefault(); setSub(s.id); window.location.hash = `ref-${s.id}`; }} style={{ textDecoration: "none" }}>{s.lb}</a>)}
       </div>
       {sub === "leg" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

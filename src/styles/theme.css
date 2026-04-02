@@ -54,6 +54,7 @@ body {
   align-items: center; gap: 6px; font-size: 13px;
   border-radius: 7px; transition: all .15s;
   font-family: inherit; white-space: nowrap;
+  text-decoration: none;
 }
 .nb:hover { color: var(--text); background: var(--bg-hover); }
 .nb.on { color: var(--gold); background: var(--gold-subtle); font-weight: 600; }
@@ -75,7 +76,7 @@ body {
   background: none; border: none; padding: 8px 14px;
   cursor: pointer; font-size: 12px; font-family: inherit;
   color: var(--text-sec); border-bottom: 2px solid transparent;
-  transition: all .15s;
+  transition: all .15s; text-decoration: none;
 }
 .stab:hover { color: var(--text); }
 .stab.on { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
