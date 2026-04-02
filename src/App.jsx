@@ -26,6 +26,7 @@ export default function App() {
   const [uping, setUp] = useState(false);
   const [area, setArea] = useState("tributario");
   const [study, setStudy] = useState({});
+  const [tagsConfig, setTagsConfig] = useState(() => { try { return JSON.parse(localStorage.getItem("t3-tags-config")) || []; } catch { return []; } });
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [apiKeyStatus, setApiKeyStatus] = useState(null);
   const fRef = useRef(null);
@@ -167,7 +168,7 @@ export default function App() {
         {vw === "library" && <Lib lib={lib} sel={sel} onSel={l => { setSel(l); setVw("reader"); }} onDel={del} onUp={upF} uping={uping} fRef={fRef} />}
         {vw === "reader" && sel && <Reader lei={sel} area={area} gSt={gSt} uSt={uSt} addAnexo={addAnexo} delAnexo={delAnexo} study={study} />}
         {vw === "econsultor" && <EConsultor lib={lib} />}
-        {vw === "buscageral" && <BuscaGeral lib={lib} />}
+        {vw === "buscageral" && <BuscaGeral lib={lib} study={study} tagsConfig={tagsConfig} />}
         {vw === "reforma" && <Ref />}
         {vw === "atualizacoes" && <Atl />}
       </main>

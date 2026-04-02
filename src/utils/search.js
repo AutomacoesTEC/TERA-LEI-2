@@ -1,8 +1,9 @@
 import { AREAS } from '../constants/areas';
 import { DIV } from '../constants/patterns';
 
-export function fullTextSearch(ds, termo) {
-  if (!termo || termo.trim().length < 3) return [];
+export function fullTextSearch(ds, termo, leiId = null, study = null, tagsConfig = [], scope = { legis: true, notas: true }) {
+  const hasTerm = termo && termo.trim().length >= 3;
+  if (!hasTerm && !termo.includes("#")) return [];
   const termos = termo.split("+")
     .map(t => t.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
     .filter(t => t.length >= 3);
@@ -14,9 +15,20 @@ export function fullTextSearch(ds, termo) {
       const d = ds[i];
       if (DIV.has(d.tipo)) artAtual = "";
       else if (d.tipo === "ARTIGO") artAtual = d.id;
-      const texto = ((d.id || "") + " " + (d.rub || "") + " " + (d.txt || "")).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      if (termos.every(t => texto.includes(t))) {
-        const ocorrencias = termos.reduce((s, t) => s + (texto.split(t).length - 1), 0);
+      let textoLegis = "";
+      if (scope.legis) textoLegis = ((d.id || "") + " " + (d.rub || "") + " " + (d.txt || ""));
+      let textoNotas = "";
+      if (leiId && study) {
+        const k = `${leiId}-${i}`;
+        const note = (scope.notas ? study[k]?.note : "") || "";
+        const tags = study[k]?.tags || [];
+        const noteTags = study[k]?.noteTags || [];
+        const tagNames = tagsConfig.filter(t => tags.includes(t.id) || noteTags.includes(t.id)).map(t => "#" + t.name).join(" ");
+        textoNotas = note + " " + tagNames;
+      }
+      const textoFinal = (textoLegis + " " + textoNotas).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (termos.every(t => textoFinal.includes(t))) {
+        const ocorrencias = hasTerm ? termos.reduce((s, t) => s + (textoFinal.split(t).length - 1), 0) : 1;
         resultados.push({ idx: i, tipo: d.tipo, id: d.id, art: artAtual, txt: d.txt, rub: d.rub, ocorrencias, status: d.status || "vigente" });
       }
     } catch (_) {}
