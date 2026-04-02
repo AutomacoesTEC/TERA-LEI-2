@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Sp } from '../../constants/icons';
-import renderD3Tree from './renderD3Tree';
 
 export default function TabTeia({ ds, buildRecursiveTree, buildRecursiveChain }) {
   const [artFilter, setArtFilter] = useState("");
@@ -37,7 +36,7 @@ export default function TabTeia({ ds, buildRecursiveTree, buildRecursiveChain })
 
   useEffect(() => {
     if (viewMode === "graph" && tree && svgRef.current) {
-      renderD3Tree(tree, svgRef.current, (nodeData) => setSelNode(nodeData));
+      import('./renderD3Tree').then(m => m.default(tree, svgRef.current, (nodeData) => setSelNode(nodeData)));
     }
   }, [viewMode, tree]);
 

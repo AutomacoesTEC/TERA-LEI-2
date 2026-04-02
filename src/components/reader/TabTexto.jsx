@@ -5,8 +5,9 @@ export default function TabTexto({ ds, lei, gSt, uSt, goSearch }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!goSearch || !containerRef.current) return;
-    const el = containerRef.current.querySelector(`[data-art-id="${goSearch}"]`);
+    const artId = goSearch?.art || goSearch;
+    if (!artId || !containerRef.current) return;
+    const el = containerRef.current.querySelector(`[data-art-id="${artId}"]`);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
       el.style.outline = "2px solid var(--gold)";

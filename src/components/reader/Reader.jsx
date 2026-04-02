@@ -1,20 +1,20 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, lazy, Suspense } from 'react';
 import { AREAS } from '../../constants/areas';
 import { DIV } from '../../constants/patterns';
 import { hierarquia, extrairPrazosValores, buildIdx } from '../../utils/search';
 import * as XLSX from 'xlsx';
 import TabTexto from './TabTexto';
-import TabArtigos from './TabArtigos';
-import TabEstudo from './TabEstudo';
-import TabTeia from './TabTeia';
-import TabIndice from './TabIndice';
 import TabMapa from './TabMapa';
-import TabAnexos from './TabAnexos';
+const TabArtigos = lazy(() => import('./TabArtigos'));
+const TabEstudo = lazy(() => import('./TabEstudo'));
+const TabTeia = lazy(() => import('./TabTeia'));
+const TabIndice = lazy(() => import('./TabIndice'));
+const TabAnexos = lazy(() => import('./TabAnexos'));
 
 export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study }) {
   const [tab, setTab] = useState("mapa");
   const [saved, setSaved] = useState(false);
-  const [goSearch, setGoSearch] = useState("");
+  const [goSearch, setGoSearch] = useState({ art: "", ts: 0 });
   const tabs = [
     { id: "mapa", lb: "Mapa" }, { id: "teia", lb: "Teia" }, { id: "busca", lb: "Busca" },
     { id: "estudo", lb: "Estudo Guiado" }, { id: "texto", lb: "Texto Integral" },
@@ -213,12 +213,14 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study 
         {tabs.map(t => <button key={t.id} className={`stab ${tab === t.id ? "on" : ""}`} onClick={() => setTab(t.id)}>{t.lb}</button>)}
       </div>
       {tab === "texto" && <TabTexto ds={ds} lei={lei} gSt={gSt} uSt={wrappedUSt} goSearch={goSearch} />}
-      {tab === "artigos" && <TabArtigos ds={ds} />}
-      {tab === "estudo" && <TabEstudo ds={ds} lei={lei} gSt={gSt} uSt={wrappedUSt} />}
-      {tab === "busca" && <TabIndice ds={ds} area={area} onGoToArt={a => { setGoSearch(a); setTab("texto"); }} />}
       {tab === "mapa" && <TabMapa ds={ds} />}
-      {tab === "anexos" && <TabAnexos lei={lei} addAnexo={addAnexo} delAnexo={delAnexo} />}
-      {tab === "teia" && <TabTeia ds={ds} buildRecursiveTree={buildRecursiveTree} buildRecursiveChain={buildRecursiveChain} />}
+      <Suspense fallback={<div style={{ padding: 32, textAlign: "center", color: "var(--text-sec)", fontSize: 13 }}>Carregando…</div>}>
+        {tab === "artigos" && <TabArtigos ds={ds} />}
+        {tab === "estudo" && <TabEstudo ds={ds} lei={lei} gSt={gSt} uSt={wrappedUSt} />}
+        {tab === "busca" && <TabIndice ds={ds} area={area} onGoToArt={a => { setGoSearch({ art: a, ts: Date.now() }); setTab("texto"); }} />}
+        {tab === "anexos" && <TabAnexos lei={lei} addAnexo={addAnexo} delAnexo={delAnexo} />}
+        {tab === "teia" && <TabTeia ds={ds} buildRecursiveTree={buildRecursiveTree} buildRecursiveChain={buildRecursiveChain} />}
+      </Suspense>
     </div>
   );
 }
