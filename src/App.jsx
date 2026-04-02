@@ -55,6 +55,19 @@ export default function App() {
     getUserApiKeyStatus().then(s => setApiKeyStatus(s));
   }, [auth]);
 
+  useEffect(() => {
+    if (!auth) return;
+    const ids = ["library", "reader", "econsultor", "buscageral", "reforma", "atualizacoes"];
+    const hash = window.location.hash.replace("#", "");
+    if (hash && ids.includes(hash)) setVw(hash);
+    const onHash = () => {
+      const h = window.location.hash.replace("#", "");
+      if (h && ids.includes(h)) setVw(h);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [auth]);
+
   const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
   const handleLogin = async (token, username, userId) => {
@@ -142,19 +155,6 @@ export default function App() {
     { id: "reforma", ic: IC.sc, lb: "Reforma" },
     { id: "atualizacoes", ic: IC.bl, lb: "Atualizações" }
   ];
-
-  useEffect(() => {
-    if (!auth) return;
-    const ids = nav.map(n => n.id);
-    const hash = window.location.hash.replace("#", "");
-    if (hash && ids.includes(hash)) setVw(hash);
-    const onHash = () => {
-      const h = window.location.hash.replace("#", "");
-      if (h && ids.includes(h)) setVw(h);
-    };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, [auth]);
 
   return (
     <div style={{ minHeight: "100vh" }}>
