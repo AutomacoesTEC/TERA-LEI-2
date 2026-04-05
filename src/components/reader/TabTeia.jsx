@@ -12,7 +12,7 @@ export default function TabTeia({ ds, buildRecursiveTree, buildRecursiveChain })
   const workerRef = useRef(null);
   const svgRef = useRef(null);
 
-  const arts = useMemo(() => ds.filter(d => d.tipo === "ARTIGO" && d.status !== "vetado").map(d => d.id), [ds]);
+  const arts = useMemo(() => ds.filter(d => (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") && d.status !== "vetado").map(d => d.id), [ds]);
   const filteredArts = useMemo(() => {
     if (!artFilter.trim()) return arts;
     const f = artFilter.toLowerCase().replace(/\s/g, "");

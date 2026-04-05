@@ -15,7 +15,7 @@ export default function TabTexto({ ds, lei, gSt, uSt, goSearch }) {
       setTimeout(() => { el.style.outline = ""; el.style.outlineOffset = ""; }, 3000);
     }
   }, [goSearch]);
-  const ind = { PARTE: 0, LIVRO: 0, "TÍTULO": 0, "CAPÍTULO": 12, "SEÇÃO": 24, "SUBSEÇÃO": 36, ARTIGO: 0, "PARÁGRAFO": 20, INCISO: 36, "ALÍNEA": 52, ITEM: 68 };
+  const ind = { PARTE: 0, LIVRO: 0, "TÍTULO": 0, "CAPÍTULO": 12, "SEÇÃO": 24, "SUBSEÇÃO": 36, ARTIGO: 0, "PARÁGRAFO": 20, INCISO: 36, "ALÍNEA": 52, ITEM: 68, "SECAO_PR": 0, PERGUNTA: 12, ASSUNTO: 0, "EMENTA_DOC": 12, "DISPOSITIVOS_LEGAIS": 12, "CONCLUSAO": 12 };
   const sts = ["", "Não lido", "Lido", "Revisando", "Dominado", "Dúvida"];
   const sC = { Dominado: "#27AE60", "Dúvida": "#C0392B", Revisando: "#D4A017", Lido: "#2E86AB" };
 
@@ -31,9 +31,9 @@ export default function TabTexto({ ds, lei, gSt, uSt, goSearch }) {
           const isRevogado = d.status === "revogado";
 
           return (
-            <div key={ri} data-art-id={d.tipo === "ARTIGO" ? d.id : undefined} style={{ display: "flex", borderBottom: "1px solid var(--border)", background: isVetado ? "rgba(231,76,60,0.06)" : isRevogado ? "rgba(231,76,60,0.04)" : isD ? CT[d.tipo] || "var(--bg-hover)" : ri % 2 === 0 ? "var(--bg-card)" : "var(--bg-hover)", paddingLeft: ind[d.tipo] || 0 }}>
+            <div key={ri} data-art-id={d.tipo === "ARTIGO" || d.tipo === "PERGUNTA" ? d.id : undefined} style={{ display: "flex", borderBottom: "1px solid var(--border)", background: isVetado ? "rgba(231,76,60,0.06)" : isRevogado ? "rgba(231,76,60,0.04)" : isD ? CT[d.tipo] || "var(--bg-hover)" : ri % 2 === 0 ? "var(--bg-card)" : "var(--bg-hover)", paddingLeft: ind[d.tipo] || 0 }}>
               <div style={{ minWidth: 70, padding: "6px 4px", textAlign: "center" }}>
-                <span className="badge" style={{ background: isD ? "rgba(0,0,0,.1)" : "var(--bg-hover)", color: isD ? (d.tipo === "PARTE" || d.tipo === "LIVRO" || d.tipo === "TÍTULO" || d.tipo === "CAPÍTULO" ? "#fff" : "var(--text-sec)") : "var(--text-mute)" }}>{d.tipo}</span>
+                <span className="badge" style={{ background: isD ? "rgba(0,0,0,.1)" : "var(--bg-hover)", color: isD ? (d.tipo === "PARTE" || d.tipo === "LIVRO" || d.tipo === "TÍTULO" || d.tipo === "CAPÍTULO" ? "#fff" : d.tipo === "SECAO_PR" ? "#3498db" : d.tipo === "ASSUNTO" ? "#805ad5" : "var(--text-sec)") : "var(--text-mute)" }}>{d.tipo === "SECAO_PR" ? "SEÇÃO" : d.tipo === "EMENTA_DOC" ? "EMENTA" : d.tipo === "DISPOSITIVOS_LEGAIS" ? "DISP.LEGAIS" : d.tipo === "CONCLUSAO" ? "CONCLUSÃO" : d.tipo}</span>
                 {isVetado && <div><span className="badge badge-revogado" style={{ marginTop: 3, display: "inline-block" }}>VETADO</span></div>}
                 {isRevogado && <div><span className="badge badge-revogado" style={{ marginTop: 3, display: "inline-block" }}>REVOGADO</span></div>}
               </div>

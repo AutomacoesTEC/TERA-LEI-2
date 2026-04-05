@@ -3,7 +3,7 @@ import { PROXY } from './constants/proxy';
 import { AREAS } from './constants/areas';
 import { Ic, IC, Sp } from './constants/icons';
 import { LS, storageInit, storageLogout, saveUserApiKey, deleteUserApiKey, getUserApiKeyStatus } from './utils/storage';
-import { parse } from './utils/parser';
+import { parse, detectDocType } from './utils/parser';
 import { pdfToText } from './utils/pdf';
 import Logo from './components/ui/Logo';
 import ThemeBtn from './components/ui/ThemeBtn';
@@ -92,8 +92,10 @@ export default function App() {
     setUp(true);
     try {
       const t = await pdfToText(f);
-      const ds = parse(t);
-      const l = { id: Date.now() + "", nome: f.name.replace(/\.pdf$/i, ""), data: new Date().toLocaleDateString("pt-BR"), ds, nA: ds.filter(d => d.tipo === "ARTIGO").length, nD: ds.length, area, anexos: [] };
+      const docTipo = detectDocType(t);
+      const ds = parse(t, docTipo);
+      const nA = docTipo === "PER" ? ds.filter(d => d.tipo === "PERGUNTA").length : ds.filter(d => d.tipo === "ARTIGO").length;
+      const l = { id: Date.now() + "", nome: f.name.replace(/\.pdf$/i, ""), data: new Date().toLocaleDateString("pt-BR"), ds, nA, nD: ds.length, area, anexos: [], docTipo };
       const nl = [l, ...lib]; setLib(nl); LS("t3-lib", nl); setSel(l); setVw("reader");
     } catch (e) { alert("Erro: " + e.message); }
     setUp(false); if (fRef.current) fRef.current.value = "";

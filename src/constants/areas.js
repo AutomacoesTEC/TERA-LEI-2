@@ -1,7 +1,7 @@
 export const AREAS = {
   tributario: {
     nome: "Tributário",
-    palavras: ["microempresa","empresa de pequeno porte","simples nacional","receita bruta","alíquota","base de cálculo","fato gerador","contribuinte","sujeito passivo","obrigação tributária","crédito tributário","lançamento","isenção","imunidade","prescrição","decadência","compensação","multa","juros","mora","ICMS","ISS","IPI","PIS","COFINS","IRPJ","CSLL","INSS","nota fiscal","escrituração","declaração","MEI","parcelamento","certidão negativa","substituição tributária","dívida ativa","execução fiscal","IBS","CBS","imposto seletivo","IVA","não cumulatividade","cashback","split payment","comitê gestor"]
+    palavras: ["microempresa","empresa de pequeno porte","simples nacional","receita bruta","alíquota","base de cálculo","fato gerador","contribuinte","sujeito passivo","obrigação tributária","crédito tributário","lançamento","isenção","imunidade","prescrição","decadência","compensação","multa","juros","mora","ICMS","ISS","IPI","PIS","COFINS","IRPJ","CSLL","INSS","nota fiscal","escrituração","declaração","MEI","parcelamento","certidão negativa","substituição tributária","dívida ativa","execução fiscal","IBS","CBS","imposto seletivo","IVA","não cumulatividade","cashback","split payment","comitê gestor","lucro real","lucro presumido","lucro arbitrado","pessoa jurídica","EFD","contribuições","escrituração digital","solução de consulta","ato declaratório","interpretativo","interpretação","cosit","disit","lucro bruto","regime tributário","apuração","retenção","dedução","abatimento","cumulativo","não cumulativo","regime especial","optante","opção"]
   },
   civil: {
     nome: "Civil",

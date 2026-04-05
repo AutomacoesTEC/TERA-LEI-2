@@ -3,9 +3,9 @@ import { DIV } from '../../constants/patterns';
 export default function TabArtigos({ ds }) {
   let art = "";
   const rows = [];
-  const tipos = new Set(["ARTIGO", "PARÁGRAFO", "INCISO", "ALÍNEA", "ITEM"]);
+  const tipos = new Set(["ARTIGO", "PARÁGRAFO", "INCISO", "ALÍNEA", "ITEM", "PERGUNTA", "EMENTA_DOC", "DISPOSITIVOS_LEGAIS", "CONCLUSAO"]);
   for (const d of ds) {
-    if (d.tipo === "ARTIGO") art = d.id;
+    if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") art = d.id;
     if (tipos.has(d.tipo)) rows.push({ art, tipo: d.tipo, id: d.id, rub: d.rub, txt: d.txt, status: d.status || "vigente", alteracao: d.alteracao || "" });
   }
 

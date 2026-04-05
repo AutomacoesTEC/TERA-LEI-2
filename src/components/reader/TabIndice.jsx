@@ -27,8 +27,8 @@ export default function TabIndice({ ds, area, onGoToArt }) {
   const getArtigoDisps = (artId) => {
     const result = []; let inside = false;
     for (const d of ds) {
-      if (d.tipo === "ARTIGO" && d.id === artId) { inside = true; result.push(d); continue; }
-      if (inside) { if (d.tipo === "ARTIGO" || DIV.has(d.tipo)) break; result.push(d); }
+      if ((d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") && d.id === artId) { inside = true; result.push(d); continue; }
+      if (inside) { if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA" || DIV.has(d.tipo)) break; result.push(d); }
     }
     return result;
   };

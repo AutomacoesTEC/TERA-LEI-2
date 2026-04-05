@@ -7,8 +7,8 @@ export default function TabMapa({ ds }) {
 
   const estrutura = useMemo(() => {
     const mapa = [];
-    const stack = { PARTE: null, LIVRO: null, "TÍTULO": null, "CAPÍTULO": null, "SEÇÃO": null, "SUBSEÇÃO": null };
-    const levels = ["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO"];
+    const stack = { PARTE: null, LIVRO: null, "TÍTULO": null, "CAPÍTULO": null, "SEÇÃO": null, "SUBSEÇÃO": null, "SECAO_PR": null, "ASSUNTO": null };
+    const levels = ["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO", "SECAO_PR", "ASSUNTO"];
     const clearBelow = (tipo) => { const idx = levels.indexOf(tipo); for (let i = idx + 1; i < levels.length; i++) stack[levels[i]] = null; };
     const getParent = (tipo) => { const idx = levels.indexOf(tipo); for (let i = idx - 1; i >= 0; i--) { if (stack[levels[i]]) return stack[levels[i]]; } return null; };
     for (const d of ds) {
@@ -17,7 +17,7 @@ export default function TabMapa({ ds }) {
         clearBelow(d.tipo); stack[d.tipo] = node;
         const parent = getParent(d.tipo);
         if (parent) parent.children.push(node); else mapa.push(node);
-      } else if (d.tipo === "ARTIGO") {
+      } else if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") {
         let target = null;
         for (let i = levels.length - 1; i >= 0; i--) { if (stack[levels[i]]) { target = stack[levels[i]]; break; } }
         const artEntry = { id: d.id, status: d.status || "vigente" };
@@ -64,8 +64,8 @@ export default function TabMapa({ ds }) {
     if (!selArt) return null;
     const result = []; let inside = false;
     for (const d of ds) {
-      if (d.tipo === "ARTIGO" && d.id === selArt) { inside = true; result.push(d); continue; }
-      if (inside) { if (d.tipo === "ARTIGO" || DIV.has(d.tipo)) break; result.push(d); }
+      if ((d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") && d.id === selArt) { inside = true; result.push(d); continue; }
+      if (inside) { if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA" || DIV.has(d.tipo)) break; result.push(d); }
     }
     return result.length > 0 ? result : null;
   }, [ds, selArt]);
@@ -100,7 +100,9 @@ export default function TabMapa({ ds }) {
       "TÍTULO": { bg: "var(--gold-subtle)", color: "var(--gold)", fontWeight: 600, fontSize: 13, borderRadius: 6, padding: "7px 12px" },
       "CAPÍTULO": { bg: "var(--bg-hover)", color: "var(--text)", fontWeight: 600, fontSize: 12, borderRadius: 6, padding: "6px 10px" },
       "SEÇÃO": { bg: "transparent", color: "var(--text-sec)", fontWeight: 500, fontSize: 12, borderRadius: 4, padding: "4px 10px" },
-      "SUBSEÇÃO": { bg: "transparent", color: "var(--text-mute)", fontWeight: 400, fontSize: 11, borderRadius: 4, padding: "4px 10px" }
+      "SUBSEÇÃO": { bg: "transparent", color: "var(--text-mute)", fontWeight: 400, fontSize: 11, borderRadius: 4, padding: "4px 10px" },
+      "SECAO_PR": { bg: "rgba(52,152,219,0.15)", color: "#3498db", fontWeight: 600, fontSize: 12, borderRadius: 5, padding: "5px 10px" },
+      "ASSUNTO": { bg: "rgba(128,90,213,0.15)", color: "#805ad5", fontWeight: 600, fontSize: 12, borderRadius: 5, padding: "5px 10px" }
     };
     const st = lvlStyle[node.tipo] || lvlStyle["SEÇÃO"];
     const indent = depth * 12;
@@ -164,7 +166,7 @@ export default function TabMapa({ ds }) {
           <div className="fade">
             {artPath && <div style={{ fontSize: 11, color: "var(--text-sec)", marginBottom: 8, fontStyle: "italic", lineHeight: 1.5 }}>{artPath}</div>}
             {artDetail.map((d, i) => {
-              const isArt = d.tipo === "ARTIGO"; const isRev = d.status === "revogado"; const isVet = d.status === "vetado"; const isInativo = isRev || isVet;
+              const isArt = d.tipo === "ARTIGO" || d.tipo === "PERGUNTA"; const isRev = d.status === "revogado"; const isVet = d.status === "vetado"; const isInativo = isRev || isVet;
               return (
                 <div key={i} style={{ marginBottom: isArt ? 8 : 2, paddingLeft: isArt ? 0 : 16, opacity: isInativo ? 0.6 : 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>

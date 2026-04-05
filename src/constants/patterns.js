@@ -12,7 +12,7 @@ export const PATS = [
   { t: "ITEM", r: /^\s*\d+\.\s+/ }
 ];
 
-export const DIV = new Set(["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO"]);
+export const DIV = new Set(["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO", "SECAO_PR", "ASSUNTO"]);
 
 export function getCS(v) {
   return getComputedStyle(document.body).getPropertyValue(v).trim() || v;
@@ -24,5 +24,9 @@ export const CT = {
   get "TÍTULO"() { return getCS("--gold"); },
   get "CAPÍTULO"() { return getCS("--gold-bright"); },
   get "SEÇÃO"() { return getCS("--border"); },
-  get "SUBSEÇÃO"() { return getCS("--bg-hover"); }
+  get "SUBSEÇÃO"() { return getCS("--bg-hover"); },
+  get "SECAO_PR"() { return "rgba(52,152,219,0.15)"; },
+  get "ASSUNTO"() { return "rgba(128,90,213,0.15)"; },
+  get "EMENTA_DOC"() { return "rgba(212,168,83,0.12)"; },
+  get "CONCLUSAO"() { return "rgba(39,174,96,0.10)"; }
 };

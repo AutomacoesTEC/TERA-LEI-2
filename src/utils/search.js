@@ -14,7 +14,7 @@ export function fullTextSearch(ds, termo, leiId = null, study = null, tagsConfig
     try {
       const d = ds[i];
       if (DIV.has(d.tipo)) artAtual = "";
-      else if (d.tipo === "ARTIGO") artAtual = d.id;
+      else if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") artAtual = d.id;
       let textoLegis = "";
       if (scope.legis) textoLegis = ((d.id || "") + " " + (d.rub || "") + " " + (d.txt || ""));
       let textoNotas = "";
@@ -38,15 +38,15 @@ export function fullTextSearch(ds, termo, leiId = null, study = null, tagsConfig
 
 export function hierarquia(ds) {
   const ctx = {};
-  const trilha = { PARTE: "", LIVRO: "", "TÍTULO": "", "CAPÍTULO": "", "SEÇÃO": "", "SUBSEÇÃO": "" };
-  const niv = ["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO"];
+  const trilha = { PARTE: "", LIVRO: "", "TÍTULO": "", "CAPÍTULO": "", "SEÇÃO": "", "SUBSEÇÃO": "", "SECAO_PR": "", "ASSUNTO": "" };
+  const niv = ["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO", "SECAO_PR", "ASSUNTO"];
   for (const d of ds) {
     if (DIV.has(d.tipo)) {
       trilha[d.tipo] = d.rub || d.id;
       const i = niv.indexOf(d.tipo);
       for (let j = i + 1; j < niv.length; j++) trilha[niv[j]] = "";
     }
-    if (d.tipo === "ARTIGO") ctx[d.id] = Object.values(trilha).filter(Boolean).join(" > ");
+    if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") ctx[d.id] = Object.values(trilha).filter(Boolean).join(" > ");
   }
   return ctx;
 }
@@ -56,7 +56,7 @@ export function buildIdx(ds, area) {
   const idx = {};
   let art = "";
   for (const d of ds) {
-    if (d.tipo === "ARTIGO") art = d.id;
+    if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") art = d.id;
     const t = (d.txt + " " + d.rub).toLowerCase();
     for (const w of ws) if (t.includes(w.toLowerCase()) && art) {
       if (!idx[w]) idx[w] = [];
@@ -71,7 +71,7 @@ export function extrairRemissoes(ds) {
   const res = [];
   let art = "";
   for (const d of ds) {
-    if (d.tipo === "ARTIGO") art = d.id;
+    if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") art = d.id;
     const full = d.txt + " " + d.rub;
     let m;
     re.lastIndex = 0;
@@ -93,8 +93,8 @@ export function extrairPrazosValores(ds) {
   const res = [];
   let art = "", cap = "";
   for (const d of ds) {
-    if (d.tipo === "CAPÍTULO") cap = d.rub || d.id;
-    if (d.tipo === "ARTIGO") art = d.id;
+    if (d.tipo === "CAPÍTULO" || d.tipo === "SECAO_PR" || d.tipo === "ASSUNTO") cap = d.rub || d.id;
+    if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") art = d.id;
     if (!d.txt) continue;
     for (const rx of [[reVal, "VALOR (R$)"], [rePct, "PERCENTUAL (%)"], [rePrazo, "PRAZO"]]) {
       rx[0].lastIndex = 0;

@@ -38,8 +38,8 @@ export default function TabEstudo({ ds, lei, gSt, uSt, tagsConfig = [], setTagsC
 
   const estrutura = useMemo(() => {
     const mapa = [];
-    const stack = { PARTE: null, LIVRO: null, "TÍTULO": null, "CAPÍTULO": null, "SEÇÃO": null, "SUBSEÇÃO": null };
-    const levels = ["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO"];
+    const stack = { PARTE: null, LIVRO: null, "TÍTULO": null, "CAPÍTULO": null, "SEÇÃO": null, "SUBSEÇÃO": null, "SECAO_PR": null, "ASSUNTO": null };
+    const levels = ["PARTE", "LIVRO", "TÍTULO", "CAPÍTULO", "SEÇÃO", "SUBSEÇÃO", "SECAO_PR", "ASSUNTO"];
     const clearBelow = (tipo) => { const idx = levels.indexOf(tipo); for (let i = idx + 1; i < levels.length; i++) stack[levels[i]] = null; };
     const getParent = (tipo) => { const idx = levels.indexOf(tipo); for (let i = idx - 1; i >= 0; i--) { if (stack[levels[i]]) return stack[levels[i]]; } return null; };
     for (let dsIdx = 0; dsIdx < ds.length; dsIdx++) {
@@ -102,6 +102,8 @@ export default function TabEstudo({ ds, lei, gSt, uSt, tagsConfig = [], setTagsC
     "CAPÍTULO": { bg: "var(--bg-hover)", color: "var(--text)", fw: 600, fs: 11, pad: "5px 8px" },
     "SEÇÃO": { bg: "transparent", color: "var(--text-sec)", fw: 500, fs: 11, pad: "4px 8px" },
     "SUBSEÇÃO": { bg: "transparent", color: "var(--text-mute)", fw: 400, fs: 10, pad: "3px 8px" },
+    "SECAO_PR": { bg: "rgba(52,152,219,0.12)", color: "#3498db", fw: 600, fs: 11, pad: "4px 8px" },
+    "ASSUNTO": { bg: "rgba(128,90,213,0.12)", color: "#805ad5", fw: 600, fs: 11, pad: "4px 8px" },
   };
 
   const renderNavNode = (node, depth, pathKey) => {

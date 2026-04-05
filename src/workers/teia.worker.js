@@ -1,11 +1,11 @@
 "use strict";
-const _DIV = new Set(["PARTE","LIVRO","TÍTULO","CAPÍTULO","SEÇÃO","SUBSEÇÃO"]);
+const _DIV = new Set(["PARTE","LIVRO","TÍTULO","CAPÍTULO","SEÇÃO","SUBSEÇÃO","SECAO_PR","ASSUNTO"]);
 
 function _buildIndices(ds) {
   const ai = new Map();
   const si = new Map();
   for (const d of ds) {
-    if (d.tipo !== "ARTIGO") continue;
+    if (d.tipo !== "ARTIGO" && d.tipo !== "PERGUNTA") continue;
     const k = d.id.replace(/[^0-9]/g, "");
     if (!ai.has(k)) ai.set(k, { v: null, r: null, l: null });
     const e = ai.get(k);
@@ -15,7 +15,7 @@ function _buildIndices(ds) {
   }
   let curArt = null;
   for (const d of ds) {
-    if (d.tipo === "ARTIGO") { curArt = d.id; continue; }
+    if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") { curArt = d.id; continue; }
     if (_DIV.has(d.tipo)) { curArt = null; continue; }
     if (curArt && d.status !== "vetado") {
       if (!si.has(curArt)) si.set(curArt, []);

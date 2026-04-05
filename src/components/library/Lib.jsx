@@ -30,13 +30,16 @@ export default function Lib({ lib, sel, onSel, onDel, onUp, uping, fRef }) {
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{l.nome}</div>
                   <span className="tg" style={{ background: "var(--gold-subtle)", color: "var(--gold)" }}>{AREAS[l.area]?.nome || l.area}</span>
+                  {l.docTipo === "PER" && <span className="tg" style={{ background: "rgba(52,152,219,0.12)", color: "#3498db", marginLeft: 4 }}>P&R</span>}
+                  {l.docTipo === "SC" && <span className="tg" style={{ background: "rgba(128,90,213,0.12)", color: "#805ad5", marginLeft: 4 }}>SC</span>}
+                  {l.docTipo === "ADI" && <span className="tg" style={{ background: "rgba(39,174,96,0.12)", color: "#27AE60", marginLeft: 4 }}>ADI</span>}
                 </div>
                 <button onClick={e => { e.stopPropagation(); onDel(l.id); }} style={{ background: "none", border: "none", color: "var(--text-sec)", cursor: "pointer" }}>
                   <Ic d={IC.tr} s={13} c="#8A8279" />
                 </button>
               </div>
               <div style={{ display: "flex", gap: 10, marginTop: 8, fontSize: 11, color: "var(--text-sec)", fontFamily: "'Segoe UI',sans-serif" }}>
-                <span>{l.nA} artigos</span>
+                <span>{l.nA} {l.docTipo === "PER" ? "perguntas" : "artigos"}</span>
                 <span>{l.nD} dispositivos</span>
                 <span>{l.data}</span>
               </div>

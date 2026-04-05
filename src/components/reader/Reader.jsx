@@ -27,7 +27,7 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study,
   const artIndex = useMemo(() => {
     const idx = new Map();
     for (const d of ds) {
-      if (d.tipo !== "ARTIGO") continue;
+      if (d.tipo !== "ARTIGO" && d.tipo !== "PERGUNTA") continue;
       const numId = d.id.replace(/[^0-9]/g, "");
       if (!idx.has(numId)) idx.set(numId, { vigente: null, revogado: null, last: null });
       const entry = idx.get(numId);
@@ -42,7 +42,7 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study,
     const idx = new Map();
     let currentArt = null;
     for (const d of ds) {
-      if (d.tipo === "ARTIGO") { currentArt = d.id; continue; }
+      if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") { currentArt = d.id; continue; }
       if (DIV.has(d.tipo)) { currentArt = null; continue; }
       if (currentArt && d.status !== "vetado") {
         if (!idx.has(currentArt)) idx.set(currentArt, []);
@@ -167,12 +167,12 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study,
       XLSX.utils.book_append_sheet(wb, wsTx, "Texto Integral");
       const ctx = hierarquia(ds); let art = "";
       const estData = [["Localização", "Artigo", "Dispositivo", "Texto", "Status Estudo", "Dificuldade", "Anotação", "Status Legal"]];
-      for (let i = 0; i < ds.length; i++) { const d = ds[i]; if (d.tipo === "ARTIGO") art = d.id; if (!DIV.has(d.tipo)) estData.push([ctx[art] || "", art, d.id, d.txt, gSt(lei.id, i, "status"), gSt(lei.id, i, "dif"), gSt(lei.id, i, "note"), d.status || "vigente"]); }
+      for (let i = 0; i < ds.length; i++) { const d = ds[i]; if (d.tipo === "ARTIGO" || d.tipo === "PERGUNTA") art = d.id; if (!DIV.has(d.tipo)) estData.push([ctx[art] || "", art, d.id, d.txt, gSt(lei.id, i, "status"), gSt(lei.id, i, "dif"), gSt(lei.id, i, "note"), d.status || "vigente"]); }
       const wsEst = XLSX.utils.aoa_to_sheet(estData);
       wsEst["!cols"] = [{ wch: 40 }, { wch: 12 }, { wch: 18 }, { wch: 70 }, { wch: 14 }, { wch: 14 }, { wch: 40 }, { wch: 12 }];
       XLSX.utils.book_append_sheet(wb, wsEst, "Estudo Guiado");
       const teiaData = [["Artigo Origem", "Caminho da Teia (Texto Integral)"]];
-      const artigos = ds.filter(d => d.tipo === "ARTIGO");
+      const artigos = ds.filter(d => d.tipo === "ARTIGO" || d.tipo === "PERGUNTA");
       artigos.forEach(a => {
         const chain = buildRecursiveChain(a.id);
         if (chain.length > 1) {
@@ -202,7 +202,7 @@ export default function Reader({ lei, area, gSt, uSt, addAnexo, delAnexo, study,
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
         <div>
           <h2 style={{ fontSize: 17, fontWeight: 700 }}>{lei.nome}</h2>
-          <div style={{ fontSize: 12, color: "var(--text-sec)", fontFamily: "'Segoe UI',sans-serif" }}>{lei.nD} dispositivos · {lei.nA} artigos · {(lei.anexos || []).length} anexos · {AREAS[area]?.nome}</div>
+          <div style={{ fontSize: 12, color: "var(--text-sec)", fontFamily: "'Segoe UI',sans-serif" }}>{lei.nD} dispositivos · {lei.nA} {lei.docTipo === "PER" ? "perguntas" : "artigos"} · {(lei.anexos || []).length} anexos · {AREAS[area]?.nome}</div>
         </div>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           {saved && <span style={{ fontSize: 12, color: "var(--ok)", fontWeight: 600, animation: "fadeIn .2s" }}>Salvo!</span>}
